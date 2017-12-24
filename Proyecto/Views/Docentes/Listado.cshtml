@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Proyecto.Models.Docente>
+@{
+    ViewData["Title"] = "Listado";
+}
+
+<h2>Listado de Docentes</h2>
+<table class="table table-bordered table-hover">
+    <thead>
+        <th>Rut</th>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Sexo</th>
+        <th>Título</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        <th>Ver</th>
+        <th>Editar</th>
+        <th>Eliminar</th>
+    </thead>
+    <tbody>
+        @foreach (Proyecto.Models.Docente d in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => d.Rut)</td>
+                <td>@Html.DisplayFor(m => d.Nombre)</td>
+                <td>@Html.DisplayFor(m => d.Apellidos)</td>
+                <td>@Html.DisplayFor(m => d.Sexo)</td>
+                <td>@Html.DisplayFor(m => d.Titulo)</td>
+                <td>@Html.DisplayFor(m => d.Telefono)</td>
+                <td>@Html.DisplayFor(m => d.Email)</td>
+                <td>@Html.ActionLink("Ver", "Ficha", new { Rut = d.Rut })</td>
+                <td>@Html.ActionLink("Editar", "Editar", new { Rut = d.Rut })</td>
+                <td>@Html.ActionLink("Eliminar", "Eliminar", new { Rut = d.Rut })</td>
+            </tr>
+        }
+    </tbody>
+</table>

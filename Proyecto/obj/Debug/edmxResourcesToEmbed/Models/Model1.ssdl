@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProyectoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Curso">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Docente" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Costo" Type="int" Nullable="false" />
+    <Property Name="Jornada" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Modalidad" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Cupo" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Docente">
+    <Key>
+      <PropertyRef Name="Rut" />
+    </Key>
+    <Property Name="Rut" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Apellidos" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Sexo" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Titulo" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Telefono" Type="int" />
+    <Property Name="Email" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Id" Type="int" />
+  </EntityType>
+  <Association Name="FK__Docente__Id__1DE57479">
+    <End Role="Curso" Type="Self.Curso" Multiplicity="0..1" />
+    <End Role="Docente" Type="Self.Docente" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Curso">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Docente">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ProyectoModelStoreContainer">
+    <EntitySet Name="Curso" EntityType="Self.Curso" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Docente" EntityType="Self.Docente" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK__Docente__Id__1DE57479" Association="Self.FK__Docente__Id__1DE57479">
+      <End Role="Curso" EntitySet="Curso" />
+      <End Role="Docente" EntitySet="Docente" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
