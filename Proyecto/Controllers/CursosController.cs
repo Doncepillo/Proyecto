@@ -9,89 +9,99 @@ namespace Proyecto.Controllers
 {
     public class CursosController : Controller
     {
-        ProyectoEntities1 cnx;
-
-        public CursosController()
+        public ActionResult Cursos()
         {
-            cnx = new ProyectoEntities1();
-
-        }
-        public ActionResult NuevoCurso()
-        {
-
             return View();
         }
 
-
-        public ActionResult Listado()
+        public ActionResult GetCursos()
         {
-
-            cnx.Database.Connection.Open();
-
-            List<Curso> curso = cnx.Curso.ToList();
-            cnx.Database.Connection.Close();
-            return View(curso);
-        }
-
-        
-
-        public ActionResult Guardar(string Nombre, string Docente, int Costo, string Jornada, string Modalidad, int Cupo)
-        {
-            Curso curso = new Curso()
+            using (ProyectoEntities dc = new ProyectoEntities())
             {
-               
-                Nombre = Nombre,
-                Docente = Docente,
-                Costo = Costo,
-                Jornada = Jornada,
-                Modalidad = Modalidad,
-                Cupo = Cupo
-
-            };
-
-            cnx.Curso.Add(curso);
-            cnx.SaveChanges();
-            return View("Listado", cnx.Curso.ToList());
-
+                var curso = dc.Curso.OrderBy(a => a.Nombre).ToList();
+                return Json(new { data = curso }, JsonRequestBehavior.AllowGet);
+            }
         }
 
-
-
-        public ActionResult Ficha(int Id)
+        [HttpGet]
+        public ActionResult Save(int id)
         {
-
-            return View(cnx.Curso.Where(x => x.Id == Id).First());
-
+            using (ProyectoEntities dc = new ProyectoEntities())
+            {
+                var v = dc.Curso.Where(a => a.Id == id).FirstOrDefault();
+                return View(v);
+            }
         }
 
-
-
-
-        public ActionResult Ver(int Id)
+        [HttpPost]
+        [ActionName("Save")]
+        public ActionResult Save(Curso c)
         {
+            bool status = false;
+            if (ModelState.IsValid)
+            {
+                using (ProyectoEntities dc = new ProyectoEntities())
+                {
+                    if (c.Id > 0)
+                    {
+                        
+                        var v = dc.Curso.Where(a => a.Id == c.Id).FirstOrDefault();
+                        if (v != null)
+                        {
+                            v.Nombre = c.Nombre;
+                            v.Docente = c.Docente;
+                            v.Jornada = c.Jornada;
+                            v.Modalidad = c.Modalidad;
+                        }
+                    }
+                    else
+                    {
+                        
+                        dc.Curso.Add(c);
+                    }
 
-
-            return View("Ficha", null);
+                    dc.SaveChanges();
+                    status = true;
+                }
+            }
+            return new JsonResult { Data = new { status = status } };
         }
 
 
-        public ActionResult Eliminar(int Id)
+
+        [HttpGet]
+        public ActionResult Delete(int id)
         {
-            cnx.Curso.Remove(cnx.Curso.Where(x => x.Id == Id).First());
-            cnx.SaveChanges();
-            return View("Listado", cnx.Curso.ToList());
-
+            using (ProyectoEntities dc = new ProyectoEntities())
+            {
+                var v = dc.Curso.Where(a => a.Id == id).FirstOrDefault();
+                if (v != null)
+                {
+                    return View(v);
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
         }
 
-        public ActionResult Editar(int Id)
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult EliminarCurso(int id)
         {
-
-            return View(cnx.Curso.Where(x => x.Id == Id).First());
-
-
-
+            bool status = false;
+            using (ProyectoEntities dc = new ProyectoEntities())
+            {
+                var v = dc.Curso.Where(a => a.Id == id).FirstOrDefault();
+                if (v != null)
+                {
+                    dc.Curso.Remove(v);
+                    dc.SaveChanges();
+                    status = true;
+                }
+            }
+            return new JsonResult { Data = new { status = status } };
         }
-
-
     }
 }

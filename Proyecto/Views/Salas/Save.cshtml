@@ -1,0 +1,26 @@
+﻿@model Proyecto.Models.Salon
+
+<h2>Guardar</h2>
+@using (Html.BeginForm("Save", "Salas", FormMethod.Post, new { id = "popupForm" }))
+{
+    if (Model != null && Model.Id > 0)
+    {
+        @Html.HiddenFor(a => a.Id)
+    }
+
+    <div class="form-group">
+        <label>Sala</label>
+        @Html.TextBoxFor(a => a.Sala, new { @class = "form-control" })
+        @Html.ValidationMessageFor(a => a.Sala)
+    </div>
+    <div class="form-group">
+        <label>Edificio</label>
+        @Html.TextBoxFor(a => a.Edificio, new { @class = "form-control" })
+        @Html.ValidationMessageFor(a => a.Edificio)
+    </div>
+
+
+    <div>
+        <input type="submit" value="Save" />
+    </div>
+}

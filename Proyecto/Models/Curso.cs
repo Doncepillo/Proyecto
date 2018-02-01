@@ -14,21 +14,10 @@ namespace Proyecto.Models
     
     public partial class Curso
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Curso()
-        {
-            this.Docente1 = new HashSet<Docente>();
-        }
-    
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Docente { get; set; }
-        public int Costo { get; set; }
         public string Jornada { get; set; }
         public string Modalidad { get; set; }
-        public int Cupo { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Docente> Docente1 { get; set; }
     }
 }

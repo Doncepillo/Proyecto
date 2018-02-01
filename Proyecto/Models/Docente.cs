@@ -14,6 +14,7 @@ namespace Proyecto.Models
     
     public partial class Docente
     {
+        public int Id { get; set; }
         public string Rut { get; set; }
         public string Nombre { get; set; }
         public string Apellidos { get; set; }
@@ -21,10 +22,5 @@ namespace Proyecto.Models
         public string Titulo { get; set; }
         public Nullable<int> Telefono { get; set; }
         public string Email { get; set; }
-        public Nullable<int> Id { get; set; }
-    
-        public virtual Curso Curso { get; set; }
     }
-
-
 }

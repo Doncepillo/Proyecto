@@ -1,0 +1,404 @@
+﻿@{
+    ViewBag.Title = "Horario";
+}
+
+<h2>Horario</h2>
+
+
+
+
+<form class="form-horizontal" role="form">
+    <div class="col-md-3">
+        <br />
+        <br />
+        <h4>Búsqueda por Filtro</h4>
+
+        <select class="form-control" id="cbxTipo">
+            <option value="" selected="selected">--Seleccione Filtro--</option>
+            <option value="Subject">Clase</option>
+            <option value="Docente">Docente</option>
+            <option value="Sala">Sala</option>
+            <option value="Edificio">Edificio</option>
+            <option value="ThemeColor">Color</option>
+        </select>
+        <br />
+
+        <input type="text" class="form-control" id="txtFiltro" placeholder="Ingrese parámetros de búsqueda" />
+        <br />
+        <input type="button" id="btnFiltrar" value="Buscar" class="btn btn-primary">
+
+
+
+
+
+    </div>
+</form>
+
+
+
+<div id="calender" class="col-md-9"></div>
+
+
+
+
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body">
+                <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                    <span class="glyphicon glyphicon-remove"></span> Eliminar
+                </button>
+                <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+                    <span class="glyphicon glyphicon-pencil"></span> Editar
+                </button>
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModalSave" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Guardar Evento</h4>
+            </div>
+            <div class="modal-body">
+                <form class="col-md-12 form-horizontal">
+                    <input type="hidden" id="hdEventId" value="0" />
+                    <div class="form-group">
+                        <label>Título</label>
+                        <input type="text" id="txtSubject" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Docente</label>
+                        <input type="text" id="txtDocente" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Sala</label>
+                        <input type="text" id="txtSala" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Edificio</label>
+                        <input type="text" id="txtEdificio" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Inicio</label>
+                        <div class="input-group date" id="dtp1">
+                            <input type="text" id="txtStart" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                    </div>
+                    <div class="form-group" id="divEndDate">
+                        <label>Fin</label>
+                        <div class="input-group date" id="dtp2">
+                            <input type="text" id="txtEnd" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Color</label>
+                        <select id="ddThemeColor" class="form-control">
+                            <option value="" selected="selected">-- Seleccione un color --</option>
+                            <option value="red">Rojo</option>
+                            <option value="blue">Azul</option>
+                            <option value="black">Negro</option>
+                            <option value="green">Verde</option>
+                            <option value="orange">Naranjo</option>
+                            <option value="yellow">Amarillo</option>
+                            <option value="brown">Café</option>
+                            <option value="grey">Gris</option>
+                            <option value="green">Verde</option>
+                        </select>
+                    </div>
+                    <button type="button" id="btnSave" class="btn btn-success">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="~/Scripts/jquery-2.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/locale/es.js'></script>
+
+
+<script>
+
+
+
+    $(document).ready(function () {
+        var events = [];
+        var selectedEvent = null;
+        FetchEventAndRenderCalendar();
+
+
+        $("#cbxTipo").change(function () {
+            FetchEventAndRenderCalendarFilter($("#cbxTipo").val(), $("#txtFiltro").val());
+        });
+        //$("#txtFiltro").keyup(function () {
+
+        //})
+        $("#btnFiltrar").click(function () {
+            FetchEventAndRenderCalendarFilter($("#cbxTipo").val(), $("#txtFiltro").val());
+
+        });
+
+
+
+        function FetchEventAndRenderCalendarFilter(tipo, value) {
+            events = [];
+            $.ajax({
+                type: "GET",
+                url: "/horarios/GetEventsFilter",
+                data: { "tipo": tipo, "value": value },
+                success: function (data) {
+                    $.each(data, function (i, v) {
+                        events.push({
+                            eventId: v.EventId,
+                            title: v.Subject,
+                            docente: v.Docente,
+                            sala: v.Sala,
+                            edificio: v.Edificio,
+                            description: v.Description,
+                            start: moment(v.Start),
+                            end: v.End != null ? moment(v.End) : null,
+                            color: v.ThemeColor
+                        });
+                    })
+
+                    GenerateCalender(events);
+                },
+                error: function (error) {
+                    alert('Falla');
+                }
+            })
+        }
+        function FetchEventAndRenderCalendar() {
+            events = [];
+            $.ajax({
+                type: "GET",
+                url: "/horarios/GetEvents",
+                success: function (data) {
+                    $.each(data, function (i, v) {
+                        events.push({
+                            eventId: v.EventId,
+                            title: v.Subject,
+                            docente: v.Docente,
+                            sala: v.Sala,
+                            edificio: v.Edificio,
+                            description: v.Description,
+                            start: moment(v.Start),
+                            end: v.End != null ? moment(v.End) : null,
+                            color: v.ThemeColor
+                        });
+                    })
+
+                    GenerateCalender(events);
+                },
+                error: function (error) {
+                    alert('Falla');
+                }
+            })
+        }
+
+
+
+        function GenerateCalender(events) {
+            $('#calender').fullCalendar('destroy');
+            $('#calender').fullCalendar({
+                contentHeight: 400,
+                defaultDate: new Date(),
+                timeFormat: 'h(:mm)a',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek,basicDay,agenda'
+                },
+                eventLimit: true,
+                eventColor: '#378006',
+                events: events,
+                eventClick: function (calEvent, jsEvent, view) {
+                    selectedEvent = calEvent;
+                    $('#myModal #eventTitle').text(calEvent.title);
+
+                    var $docente = $('<div/>');
+
+                    $docente.append($('<p/>').html('<b>Inicio: </b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+                    if (calEvent.end != null) {
+                        $docente.append($('<p/>').html('<b>Fin: </b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                    }
+                    $docente.append($('<p/>').html('<b>Docente: </b>' + calEvent.docente));
+                    $docente.append($('<p/>').html('<b>Sala: </b>' + calEvent.sala));
+                    $docente.append($('<p/>').html('<b>Edificio: </b>' + calEvent.edificio));
+                    $docente.append($('<p/>').html('<b>Descripción: </b>' + calEvent.description));
+                    $('#myModal #pDetails').empty().html($docente);
+
+
+
+
+
+
+                    $('#myModal').modal();
+                },
+                selectable: true,
+                select: function (start, end) {
+                    selectedEvent = {
+                        eventId: 0,
+                        title: '',
+                        docente: '',
+                        sala: '',
+                        edificio: '',
+                        description: '',
+                        start: start,
+                        end: end,
+                        color: ''
+                    };
+                    openAddEditForm();
+                    $('#calender').fullCalendar('unselect');
+                },
+                editable: true,
+                eventDrop: function (event) {
+                    var data = {
+                        EventId: event.eventId,
+                        Subject: event.title,
+                        Docente: event.docente,
+                        Sala: event.sala,
+                        Edificio: event.edificio,
+                        Start: event.start.format('DD/MM/YYYY HH:mm A'),
+                        End: event.end != null ? event.end.format('DD/MM/YYYY HH:mm A') : null,
+                        Description: event.description,
+                        ThemeColor: event.color
+                    };
+                    SaveEvent(data);
+                }
+            })
+        }
+
+        $('#btnEdit').click(function () {
+            openAddEditForm();
+        })
+        $('#btnDelete').click(function () {
+            if (selectedEvent != null && confirm('El evento será eliminado')) {
+                $.ajax({
+                    type: "POST",
+                    url: '/horarios/DeleteEvent',
+                    data: { 'eventId': selectedEvent.eventId },
+                    success: function (data) {
+                        if (data.status) {
+
+                            FetchEventAndRenderCalendar();
+                            $('#myModal').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        alert('Fallo');
+                    }
+                })
+            }
+        })
+
+        $('#dtp1,#dtp2').datetimepicker({
+            format: 'DD/MM/YYYY HH:mm A'
+        });
+
+
+
+        function openAddEditForm() {
+            if (selectedEvent != null) {
+                $('#hdEventId').val(selectedEvent.eventId);
+                $('#txtSubject').val(selectedEvent.title);
+                $('#txtDocente').val(selectedEvent.docente);
+                $('#txtSala').val(selectedEvent.sala);
+                $('#txtEdificio').val(selectedEvent.edificio);
+                $('#txtStart').val(selectedEvent.start.format('DD/MM/YYYY HH:mm A'));
+                $('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('DD/MM/YYYY HH:mm A') : '');
+                $('#txtDescription').val(selectedEvent.description);
+                $('#ddThemeColor').val(selectedEvent.color);
+            }
+            $('#myModal').modal('hide');
+            $('#myModalSave').modal();
+        }
+
+        $('#btnSave').click(function () {
+
+            if ($('#txtSubject').val().trim() == "") {
+                alert('Ingrese título');
+                return;
+            }
+            if ($('#txtStart').val().trim() == "") {
+                alert('Ingrese fecha de inicio');
+                return;
+            }
+
+            else {
+                var startDate = moment($('#txtStart').val(), "DD/MM/YYYY HH:mm A").toDate();
+                var endDate = moment($('#txtEnd').val(), "DD/MM/YYYY HH:mm A").toDate();
+                if (startDate > endDate) {
+                    alert('La fecha de finalización debe ser posterior a la de inicio');
+                    return;
+                }
+            }
+
+            var data = {
+                EventId: $('#hdEventId').val(),
+                Subject: $('#txtSubject').val().trim(),
+                Docente: $('#txtDocente').val().trim(),
+                Sala: $('#txtSala').val(),
+                Edificio: $('#txtEdificio').val(),
+                Start: $('#txtStart').val().trim(),
+                End: $('#txtEnd').val().trim(),
+                Description: $('#txtDescription').val(),
+                ThemeColor: $('#ddThemeColor').val()
+            }
+            SaveEvent(data);
+        })
+
+        function SaveEvent(data) {
+            $.ajax({
+                type: "POST",
+                url: '/horarios/SaveEvent',
+                data: data,
+                success: function (data) {
+                    if (data.status) {
+                        FetchEventAndRenderCalendar();
+                        $('#myModalSave').modal('hide');
+                    }
+                },
+                error: function () {
+                    alert('Falla');
+                }
+            })
+        }
+    })
+</script>

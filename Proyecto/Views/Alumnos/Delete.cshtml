@@ -1,0 +1,41 @@
+﻿@model Proyecto.Models.Alumno
+
+<h2>Eliminar Alumno</h2>
+@using (Html.BeginForm("Delete", "Alumnos", FormMethod.Post, new { id = "popupForm" }))
+{
+    @Html.HiddenFor(a => a.Id)
+    <div class="form-group">
+        <label>Nombre</label>
+        <p>@Model.Nombre</p>
+    </div>
+
+    <div class="form-group">
+        <label>Apellidos</label>
+        <p>@Model.Apellidos</p>
+    </div>
+
+    <div class="form-group">
+        <label>Curso</label>
+        <p>@Model.Curso</p>
+    </div>
+
+    <div class="form-group">
+        <label>Sexo</label>
+        <p>@Model.Sexo</p>
+    </div>
+
+    <div class="form-group">
+        <label>Teléfono</label>
+        <p>@Model.Telefono</p>
+    </div>
+
+
+    <div class="form-group">
+        <label>Email</label>
+        <p>@Model.Email</p>
+    </div>
+
+    <div>
+        <input type="submit" value="Delete" />
+    </div>
+}

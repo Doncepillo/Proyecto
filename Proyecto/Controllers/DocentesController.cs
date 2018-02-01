@@ -9,88 +9,99 @@ namespace Proyecto.Controllers
 {
     public class DocentesController : Controller
     {
-        ProyectoEntities1 cnx;
-
-        public DocentesController()
+        public ActionResult Docentes()
         {
-            cnx = new ProyectoEntities1();
-
-        }
-        public ActionResult NuevoDocente()
-        {
-
             return View();
         }
-
-        public ActionResult Listado()
+        public ActionResult GetDocentes()
         {
-
-            cnx.Database.Connection.Open();
-
-            List<Docente> docente = cnx.Docente.ToList();
-            cnx.Database.Connection.Close();
-            return View(docente);
-        }
-
-
-
-        public ActionResult Guardar(string Rut, string Nombre, string Apellidos, string Sexo, string Titulo, int Telefono, string Email)
-        {
-            Docente docente = new Docente()
+            using (ProyectoEntities dc = new ProyectoEntities())
             {
-                Rut = Rut,
-                Nombre = Nombre,
-                Apellidos = Apellidos,
-                Sexo = Sexo,
-                Titulo = Titulo,
-                Telefono = Telefono,
-                Email = Email
-
-            };
-
-            cnx.Docente.Add(docente);
-            cnx.SaveChanges();
-            return View("Listado", cnx.Docente.ToList());
-
+                var docente = dc.Docente.OrderBy(a => a.Nombre).ToList();
+                return Json(new { data = docente }, JsonRequestBehavior.AllowGet);
+            }
         }
 
-
-
-        public ActionResult Ficha(string Rut)
+        [HttpGet]
+        public ActionResult Save(int id)
         {
-
-            return View(cnx.Docente.Where(x => x.Rut == Rut).First());
-
+            using (ProyectoEntities dc = new ProyectoEntities())
+            {
+                var v = dc.Docente.Where(a => a.Id == id).FirstOrDefault();
+                return View(v);
+            }
         }
 
-
-
-
-        public ActionResult Ver(string Rut)
+        [HttpPost]
+        [ActionName("Save")]
+        public ActionResult Save(Docente d)
         {
+            bool status = false;
+            if (ModelState.IsValid)
+            {
+                using (ProyectoEntities dc = new ProyectoEntities())
+                {
+                    if (d.Id > 0)
+                    {
+                        var v = dc.Docente.Where(a => a.Id == d.Id).FirstOrDefault();
+                        if (v != null)
+                        {
+                            v.Rut = d.Rut;
+                            v.Nombre = d.Nombre;
+                            v.Apellidos = d.Apellidos;
+                            v.Sexo = d.Sexo;
+                            v.Titulo = d.Titulo;
+                            v.Telefono = d.Telefono;
+                            v.Email = d.Email;
+                        }
+                    }
+                    else
+                    {
+                        dc.Docente.Add(d);
+                    }
 
-
-            return View("Ficha", null);
+                    dc.SaveChanges();
+                    status = true;
+                }
+            }
+            return new JsonResult { Data = new { status = status } };
         }
 
 
-        public ActionResult Eliminar(string Rut)
+
+        [HttpGet]
+        public ActionResult Delete(int id)
         {
-            cnx.Docente.Remove(cnx.Docente.Where(x => x.Rut == Rut).First());
-            cnx.SaveChanges();
-            return View("Listado", cnx.Docente.ToList());
-
+            using (ProyectoEntities dc = new ProyectoEntities())
+            {
+                var v = dc.Docente.Where(a => a.Id == id).FirstOrDefault();
+                if (v != null)
+                {
+                    return View(v);
+                }
+                else
+                {
+                    return HttpNotFound();
+                }
+            }
         }
 
-        public ActionResult Editar(string Rut)
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult EliminarDocente(int id)
         {
-
-            return View(cnx.Docente.Where(x => x.Rut == Rut).First());
-
-
-
+            bool status = false;
+            using (ProyectoEntities dc = new ProyectoEntities())
+            {
+                var v = dc.Docente.Where(a => a.Id == id).FirstOrDefault();
+                if (v != null)
+                {
+                    dc.Docente.Remove(v);
+                    dc.SaveChanges();
+                    status = true;
+                }
+            }
+            return new JsonResult { Data = new { status = status } };
         }
-
-
     }
 }

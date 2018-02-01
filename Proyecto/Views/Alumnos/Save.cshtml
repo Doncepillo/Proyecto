@@ -1,0 +1,65 @@
+﻿@model Proyecto.Models.Alumno
+
+<h2>Guardar</h2>
+@using (Html.BeginForm("Save", "Alumnos", FormMethod.Post, new { id = "popupForm" }))
+{
+    if (Model != null && Model.Id > 0)
+    {
+        @Html.HiddenFor(a => a.Id)
+    }
+
+    <div class="form-group">
+        <label>Rut</label>
+        @Html.TextBoxFor(a => a.Rut, new { @class = "form-control" })
+        @Html.ValidationMessageFor(a => a.Rut)
+    </div>
+    <div class="form-group">
+        <label>Nombre</label>
+        @Html.TextBoxFor(a => a.Nombre, new { @class = "form-control" })
+        @Html.ValidationMessageFor(a => a.Nombre)
+    </div>
+    <div class="form-group">
+        <label>Apellidos</label>
+        @Html.TextBoxFor(a => a.Apellidos, new { @class = "form-control" })
+        @Html.ValidationMessageFor(a => a.Apellidos)
+    </div>
+
+    <div class="form-group">
+        <label>Curso</label>
+        @Html.DropDownList("ListaCursos", ViewBag.listacursosnombre as SelectList, "Seleccione un Curso")
+
+    </div>
+
+
+    <div class="form-group">
+        <label>Sexo</label>
+        @Html.DropDownList("Sexo", new List<SelectListItem>
+{
+    new SelectListItem{Text="Masculino", Value="Masculino"},
+    new SelectListItem{Text="Femenino", Value="Femenino"},
+}, "Seleccione Sexo",
+                                                                                                      new { @class = "form-control" }
+                                                                                                      )
+    </div>
+
+
+
+
+    <div class="form-group">
+        <label>Teléfono</label>
+        @Html.TextBoxFor(a => a.Telefono, new { @class = "form-control" })
+        @Html.ValidationMessageFor(a => a.Telefono)
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        @Html.TextBoxFor(a => a.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(a => a.Email)
+    </div>
+
+
+
+    <div>
+        <input type="submit" value="Save" />
+    </div>
+}
